@@ -1,0 +1,25 @@
+name: PE
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  grade:
+    runs-on: [self-hosted, os]
+    timeout-minutes: 10
+    name: 'Required tests'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: 'Run tests'
+        run: make validation-pe-tests import-dll-tests import-function-tests
+  grade-export:
+    runs-on: [self-hosted, os]
+    timeout-minutes: 10
+    name: 'Bonus: export'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: 'Run tests'
+        run: make export-function-tests
