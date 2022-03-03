@@ -5,16 +5,21 @@ use std::process::exit;
 
 use pe_parser::{export_functions, import_functions, is_pe};
 
-const COMMANDS: [(&str, fn(&[u8]) -> i32); 3] = [
+const OK: i32 = 0;
+const NOT_PE_ERROR: i32 = 1;
+const ARGUMENTS_ERROR: i32 = 2;
+const IO_ERROR: i32 = 3;
+
+const COMMANDS: [(&str, fn(&[u8]) -> Result<String, String>); 3] = [
     ("is-pe", is_pe),
     ("import-functions", import_functions),
     ("export-functions", export_functions),
 ];
 
-fn run(command: &str, data: &[u8]) -> i32 {
+fn run(command: &str, data: &[u8]) -> Result<String, String> {
     match COMMANDS.iter().find(|(name, _)| *name == command) {
         Some(&(_, func)) => func(data),
-        None => panic!("Cannot find a command {}!", command),
+        None => Err(format!("Cannot find a command {}!", command)),
     }
 }
 
@@ -23,7 +28,7 @@ fn main() {
 
     if args.len() != 3 {
         println!("Expected 2 arguments, found: {}", args.len() - 1);
-        exit(1);
+        exit(ARGUMENTS_ERROR);
     }
 
     let command = &args[1];
@@ -31,14 +36,23 @@ fn main() {
 
     let mut file = File::open(filename).unwrap_or_else(|why| {
         println!("Cannot open file {}: {}", filename, why);
-        exit(1);
+        exit(IO_ERROR);
     });
 
     let mut data = Vec::new();
     file.read_to_end(&mut data).unwrap_or_else(|why| {
         println!("Cannot read file {}: {}", filename, why);
-        exit(1);
+        exit(IO_ERROR);
     });
 
-    exit(run(&command, &data[..]));
+    match run(&command, &data[..]) {
+        Ok(output_string) => {
+            println!("{}", output_string);
+            exit(OK);
+        },
+        Err(error_string) => {
+            println!("{}", error_string);
+            exit(NOT_PE_ERROR);
+        },
+    }
 }
