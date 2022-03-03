@@ -1,3 +1,5 @@
+.SILENT:
+
 all: clean
 	cargo build
 	ln -s ./target/debug/pe-parser
