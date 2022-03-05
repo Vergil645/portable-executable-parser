@@ -7,6 +7,7 @@ all: clean
 
 clean:
 	rm -f pe-parser
+	rm -rf ./target
 
 validation-pe-tests: all
 	python3 -m tests ValidatingPeTestCases -f

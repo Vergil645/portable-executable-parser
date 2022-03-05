@@ -170,12 +170,12 @@ impl<'a> PortableExecutable<'a> {
         panic!("raw_from_rva");
     }
 
-    pub fn get_export_table(&self) -> &ExportTable {
-        self.export_table.as_ref().unwrap()
+    pub fn get_export_table(&self) -> Option<&ExportTable> {
+        self.export_table.as_ref()
     }
 
-    pub fn get_import_table(&self) -> &ImportTable {
-        self.import_table.as_ref().unwrap()
+    pub fn get_import_table(&self) -> Option<&ImportTable> {
+        self.import_table.as_ref()
     }
 
     fn string_from_raw(&self, raw: u32) -> String {

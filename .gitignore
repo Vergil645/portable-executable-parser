@@ -1,4 +1,4 @@
 *.o
-target/
-.idea/
+/target/
 /pe-parser
+/.idea/

@@ -19,7 +19,7 @@ const COMMANDS: [(&str, fn(&[u8]) -> Result<String, String>); 3] = [
 fn run(command: &str, data: &[u8]) -> Result<String, String> {
     match COMMANDS.iter().find(|(name, _)| *name == command) {
         Some(&(_, func)) => func(data),
-        None => Err(format!("Cannot find a command {}!", command)),
+        None => Err(format!("Cannot find a command {}", command)),
     }
 }
 
