@@ -49,10 +49,10 @@ fn main() {
         Ok(output_string) => {
             println!("{}", output_string);
             exit(OK);
-        },
+        }
         Err(error_string) => {
             println!("{}", error_string);
             exit(NOT_PE_ERROR);
-        },
+        }
     }
 }
